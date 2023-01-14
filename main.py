@@ -1,3 +1,10 @@
+"""
+Hand Tracking Module
+This program uses Hand Tracking Module to track the hand and find the position of the landmarks
+Made Using OpenCV and Mediapipe
+"""
+
+
 import cv2
 import mediapipe as mp
 import time
@@ -5,6 +12,10 @@ import HandTrackingModule as htm
 
 
 def main():
+    point = int(input("Enter the point you want to track: "))
+    if point > 21 and point < 0:
+        print("Invalid Point")
+        return
     prevTime = 0
     currTime = 0
     cap = cv2.VideoCapture(0)
@@ -12,9 +23,9 @@ def main():
     while True:
         success, img = cap.read()
         img = detector.findHands(img)
-        lmList = detector.findPosition(img, draw=False)
+        lmList = detector.findPosition(img, draw=True, handPoint=point)
         if len(lmList) != 0:
-            print(lmList[0])
+            print(lmList[point])
  
         currTime = time.time()
         fps = 1 / (currTime - prevTime)
@@ -25,6 +36,7 @@ def main():
  
         cv2.imshow("Image", img)
         if cv2.waitKey(1) == ord('q'):
+            cv2.destroyAllWindows()
             break
  
  
